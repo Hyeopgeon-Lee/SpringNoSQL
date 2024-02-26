@@ -113,11 +113,6 @@ public class MelonMapper extends AbstractMongoDBComon implements IMelonMapper {
         AggregateIterable<Document> rs = col.aggregate(pipeline).allowDiskUse(true);
 
         for (Document doc : rs) {
-
-            if (doc == null) {
-                doc = new Document();
-            }
-
             String singer = doc.getString("singer");
             int singerCnt = doc.getInteger("singerCnt", 0);
 
@@ -131,7 +126,6 @@ public class MelonMapper extends AbstractMongoDBComon implements IMelonMapper {
             doc = null;
         }
 
-        Iterator<Document> cursor = null;
         rs = null;
         col = null;
         pipeline = null;
