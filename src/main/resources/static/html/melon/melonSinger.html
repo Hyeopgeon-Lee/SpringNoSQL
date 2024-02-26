@@ -22,6 +22,8 @@
                 }).then(
                     function (json) { // 성공
 
+                        $("#melonData").empty(); // 기존 조회 내용 지우기
+
                         const result = json.data;
 
                         for (const data of result) {
