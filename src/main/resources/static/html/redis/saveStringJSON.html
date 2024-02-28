@@ -26,15 +26,11 @@
 
                         $("#redisData").empty(); // 기존 조회 내용 지우기
 
-                        const result = json.data;
-
-                        for (const data of result) {
-                            $("#redisData").append("<div class=\"divTableRow\">");
-                            $("#redisData").append("<div class=\"divTableCell\">" + data.name + "</div>");
-                            $("#redisData").append("<div class=\"divTableCell\">" + data.email + "</div>");
-                            $("#redisData").append("<div class=\"divTableCell\">" + data.addr + "</div>");
-                            $("#redisData").append("</div>");
-                        }
+                        $("#redisData").append("<div class=\"divTableRow\">");
+                        $("#redisData").append("<div class=\"divTableCell\">" + json.data.name + "</div>");
+                        $("#redisData").append("<div class=\"divTableCell\">" + json.data.email + "</div>");
+                        $("#redisData").append("<div class=\"divTableCell\">" + json.data.addr + "</div>");
+                        $("#redisData").append("</div>");
 
                     }
                 );
