@@ -27,7 +27,6 @@
                     $(this).next().remove(); // remove the <br>
                     $(this).remove(); // remove the button
                 });
-
             })
 
             // 버튼 클릭했을때, 발생되는 이벤트 생성함(onclick 이벤트와 동일함)
@@ -54,7 +53,7 @@
                     type: "post", // 전송방식은 Post
                     contentType: "application/json",
                     dataType: "JSON", // 전송 결과는 JSON으로 받기
-                    data: JSON.stringify(jsonObj)// 앞서 작성한 JSON 데이터 구조 넣기
+                    data: JSON.stringify(jsonObj) // 앞서 작성한 JSON 데이터 구조 넣기
 
                 }).then(
                     function (json) { // 성공

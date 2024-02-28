@@ -51,7 +51,7 @@
                     type: "post", // 전송방식은 Post
                     contentType: "application/json",
                     dataType: "JSON", // 전송 결과는 JSON으로 받기
-                    data: JSON.stringify(jsonObj)// form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
+                    data: JSON.stringify(jsonObj) // 앞서 작성한 JSON 데이터 구조 넣기
 
                 }).then(
                     function (json) { // 성공
