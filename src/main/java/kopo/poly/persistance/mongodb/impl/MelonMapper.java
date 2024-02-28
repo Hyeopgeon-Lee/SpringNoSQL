@@ -209,8 +209,8 @@ public class MelonMapper extends AbstractMongoDBComon implements IMelonMapper {
 
         List<Document> list = new ArrayList<>();
 
-        // 람다식 활용 stream과 -> 사용
-        pList.stream().forEach(melon ->
+        // 람다식 활용하여 병렬 처리(순서 상관없이 저장) parallelStream과 -> 사용
+        pList.parallelStream().forEach(melon ->
                 list.add(new Document(new ObjectMapper().convertValue(melon, Map.class))));
 
         // 레코드 리스트 단위로 한번에 저장하기
@@ -373,10 +373,6 @@ public class MelonMapper extends AbstractMongoDBComon implements IMelonMapper {
             String singer = CmmUtil.nvl(doc.getString("singer"));
             String nickname = CmmUtil.nvl(doc.getString("nickname"));
 
-            log.info("song : " + song);
-            log.info("singer : " + singer);
-            log.info("nickname : " + nickname);
-
             log.info("song : " + song + "/ singer : " + singer + "/ nickname : " + nickname);
 
             MelonDTO rDTO = MelonDTO.builder().song(song).singer(singer).nickname(nickname).build();
@@ -388,7 +384,6 @@ public class MelonMapper extends AbstractMongoDBComon implements IMelonMapper {
         log.info(this.getClass().getName() + ".getSingerSongNickname End!");
 
         return rList;
-
     }
 
     @Override
@@ -404,8 +399,7 @@ public class MelonMapper extends AbstractMongoDBComon implements IMelonMapper {
         List<String> member = pDTO.member();
 
         log.info("pColNm : " + pColNm);
-        log.info("singer : " + singer);
-        log.info("member : " + member);
+        log.info("pDTO : " + pDTO);
 
         // 조회할 조건(SQL의 WHERE 역할 /  SELECT * FROM MELON_20220321 where singer ='방탄소년단')
         Document query = new Document();
@@ -489,9 +483,7 @@ public class MelonMapper extends AbstractMongoDBComon implements IMelonMapper {
         String addFieldValue = CmmUtil.nvl(pDTO.addFieldValue());
 
         log.info("pColNm : " + pColNm);
-        log.info("singer : " + singer);
-        log.info("updateSinger : " + updateSinger);
-        log.info("addFieldValue : " + addFieldValue);
+        log.info("pDTO : " + pDTO);
 
         // 조회할 조건(SQL의 WHERE 역할 /  SELECT * FROM MELON_20220321 where singer ='방탄소년단')
         Document query = new Document();
@@ -551,10 +543,6 @@ public class MelonMapper extends AbstractMongoDBComon implements IMelonMapper {
             String singer = CmmUtil.nvl(doc.getString("singer"));
             String addData = CmmUtil.nvl(doc.getString("addData"));
 
-            log.info("song : " + song);
-            log.info("singer : " + singer);
-            log.info("addData : " + addData);
-
             log.info("song : " + song + "/ singer : " + singer + "/ addData : " + addData);
 
             MelonDTO rDTO = MelonDTO.builder().song(song).singer(singer).addFieldValue(addData).build();
@@ -580,7 +568,7 @@ public class MelonMapper extends AbstractMongoDBComon implements IMelonMapper {
         String singer = CmmUtil.nvl(pDTO.singer());
 
         log.info("pColNm : " + pColNm);
-        log.info("singer : " + singer);
+        log.info("pDTO : " + pDTO);
 
         // 조회할 조건(SQL의 WHERE 역할 /  SELECT * FROM MELON_20220321 where singer ='방탄소년단')
         Document query = new Document();
@@ -593,7 +581,6 @@ public class MelonMapper extends AbstractMongoDBComon implements IMelonMapper {
         // 람다식 활용하여 데이터 삭제하기
         // 전체 컬렉션에 있는 데이터들을 삭제하기
         rs.forEach(doc -> col.deleteOne(doc));
-
         res = 1;
 
         log.info(this.getClass().getName() + ".deleteDocument End!");
