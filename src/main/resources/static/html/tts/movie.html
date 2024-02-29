@@ -61,24 +61,6 @@
 
                 }
             );
-
-            // //Ajax 호출
-            // $.ajax({
-            //     url: "/rank/getMovie",
-            //     type: "post", // 전송방식은 Post
-            //     data: $("#f").serialize(), // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
-            //     dataType: "JSON", // 전송 결과는 JSON으로 받기
-            //     success: function (json) {
-            //         for (let i = 0; i < json.length; i++) {
-            //             $("#cgv_rank_list").append("순위 : " + json[i].movie_rank + "<br/>")
-            //             $("#cgv_rank_list").append("영화제목 : " + json[i].movie_nm + "<br/>")
-            //             $("#cgv_rank_list").append("영화평점 : " + json[i].score + "<br/>")
-            //             $("#cgv_rank_list").append("예매율 : " + json[i].movie_reserve + "<br/>")
-            //             $("#cgv_rank_list").append("개봉일 : " + json[i].open_day + "<br/>")
-            //             $("#cgv_rank_list").append("<hr/>")
-            //         }
-            //     }
-            // })
         };
     </script>
 </head>

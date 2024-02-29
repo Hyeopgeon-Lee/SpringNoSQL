@@ -1,5 +1,6 @@
 package kopo.poly.controller;
 
+import jakarta.validation.Valid;
 import kopo.poly.controller.response.CommonResponse;
 import kopo.poly.dto.MovieDTO;
 import kopo.poly.service.IMovieService;
@@ -29,7 +30,7 @@ public class MovieController {
      * CGV 영화 순위 가져오기
      */
     @PostMapping(value = "speechcommand")
-    public ResponseEntity getMovie(@RequestBody MovieDTO pDTO, BindingResult bindingResult) throws Exception {
+    public ResponseEntity getMovie(@Valid @RequestBody MovieDTO pDTO, BindingResult bindingResult) throws Exception {
 
         log.info(this.getClass().getName() + ".getMovie start!");
 
