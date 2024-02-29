@@ -564,7 +564,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       recognition.continuous = root.location.protocol === 'http:';
 
       // Sets the language to the default 'en-US'. This can be changed with annyang.setLanguage()
-      recognition.lang = 'en-US';
+      recognition.lang = 'ko';
 
       recognition.onstart = function () {
         _isListening = true;
