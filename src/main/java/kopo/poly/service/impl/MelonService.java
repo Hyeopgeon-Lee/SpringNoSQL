@@ -24,7 +24,7 @@ public class MelonService implements IMelonService {
 
     private final IMelonMapper melonMapper; // MongoDB에 저장할 Mapper
 
-    private final IMelonCacheMapper melonCacheMapper; // MongoDB에 저장할 Mapper
+    private final IMelonCacheMapper melonCacheMapper; // RedisDB Mapper
 
     /**
      * 멜론 차트 수집 함수(웹 크롤링)

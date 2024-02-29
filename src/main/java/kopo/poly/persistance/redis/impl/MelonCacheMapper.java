@@ -48,8 +48,6 @@ public class MelonCacheMapper implements IMelonCacheMapper {
 
     @Override
     public boolean getExistKey(String key) throws Exception {
-
-        // 저장된 키가 존재한다면...
         return redisDB.hasKey(key);
     }
 
@@ -70,7 +68,7 @@ public class MelonCacheMapper implements IMelonCacheMapper {
 
         // 저장된 데이터는 1시간동안 연장하기
         redisDB.expire(key, 1, TimeUnit.HOURS);
-        
+
         log.info(this.getClass().getName() + ".getSongList End!");
 
         return rList;
