@@ -580,7 +580,8 @@ public class MelonMapper extends AbstractMongoDBComon implements IMelonMapper {
 
         // 람다식 활용하여 데이터 삭제하기
         // 전체 컬렉션에 있는 데이터들을 삭제하기
-        rs.forEach(doc -> col.deleteOne(doc));
+        rs.forEach(col::deleteOne); // Col 객체에 자동으로 매칭되어 실행될 함수 정의
+//        rs.forEach(doc -> col.deleteOne(doc)); // rs.forEach(col::deleteOne); 동일한 문법
         res = 1;
 
         log.info(this.getClass().getName() + ".deleteDocument End!");
