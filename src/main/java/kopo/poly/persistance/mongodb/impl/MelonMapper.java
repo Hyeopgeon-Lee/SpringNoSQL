@@ -224,18 +224,18 @@ public class MelonMapper extends AbstractMongoDBComon implements IMelonMapper {
     }
 
     @Override
-    public int updateField(String pColNm, MelonDTO pDTO) throws Exception {
+    public int updateField(String colNm, MelonDTO pDTO) throws Exception {
 
         log.info(this.getClass().getName() + ".updateField Start!");
 
         int res = 0;
 
-        MongoCollection<Document> col = mongodb.getCollection(pColNm);
+        MongoCollection<Document> col = mongodb.getCollection(colNm);
 
         String singer = CmmUtil.nvl(pDTO.singer());
         String updateSinger = CmmUtil.nvl(pDTO.updateSinger());
 
-        log.info("pColNm : " + pColNm);
+        log.info("pColNm : " + colNm);
         log.info("singer : " + singer);
         log.info("updateSinger : " + updateSinger);
 
@@ -258,14 +258,14 @@ public class MelonMapper extends AbstractMongoDBComon implements IMelonMapper {
     }
 
     @Override
-    public List<MelonDTO> getUpdateSinger(String pColNm, MelonDTO pDTO) throws Exception {
+    public List<MelonDTO> getUpdateSinger(String colNm, MelonDTO pDTO) throws Exception {
 
         log.info(this.getClass().getName() + ".getUpdateSinger Start!");
 
         // 조회 결과를 전달하기 위한 객체 생성하기
         List<MelonDTO> rList = new LinkedList<>();
 
-        MongoCollection<Document> col = mongodb.getCollection(pColNm);
+        MongoCollection<Document> col = mongodb.getCollection(colNm);
 
         // 조회할 조건(SQL의 WHERE 역할 /  SELECT song, singer FROM MELON_20220321 where singer ='방탄소년단')
         Document query = new Document();
@@ -304,18 +304,18 @@ public class MelonMapper extends AbstractMongoDBComon implements IMelonMapper {
     }
 
     @Override
-    public int updateAddField(String pColNm, MelonDTO pDTO) throws Exception {
+    public int updateAddField(String colNm, MelonDTO pDTO) throws Exception {
 
         log.info(this.getClass().getName() + ".updateAddField Start!");
 
         int res = 0;
 
-        MongoCollection<Document> col = mongodb.getCollection(pColNm);
+        MongoCollection<Document> col = mongodb.getCollection(colNm);
 
         String singer = CmmUtil.nvl(pDTO.singer());
         String nickname = CmmUtil.nvl(pDTO.nickname());
 
-        log.info("pColNm : " + pColNm);
+        log.info("pColNm : " + colNm);
         log.info("singer : " + singer);
         log.info("nickname : " + nickname);
 
@@ -339,14 +339,14 @@ public class MelonMapper extends AbstractMongoDBComon implements IMelonMapper {
     }
 
     @Override
-    public List<MelonDTO> getSingerSongNickname(String pColNm, MelonDTO pDTO) throws Exception {
+    public List<MelonDTO> getSingerSongNickname(String colNm, MelonDTO pDTO) throws Exception {
 
         log.info(this.getClass().getName() + ".getSingerSongNickname Start!");
 
         // 조회 결과를 전달하기 위한 객체 생성하기
         List<MelonDTO> rList = new LinkedList<>();
 
-        MongoCollection<Document> col = mongodb.getCollection(pColNm);
+        MongoCollection<Document> col = mongodb.getCollection(colNm);
 
         // 조회할 조건(SQL의 WHERE 역할 /  SELECT song, singer FROM MELON_20220321 where singer ='방탄소년단')
         Document query = new Document();
@@ -387,18 +387,18 @@ public class MelonMapper extends AbstractMongoDBComon implements IMelonMapper {
     }
 
     @Override
-    public int updateAddListField(String pColNm, MelonDTO pDTO) throws Exception {
+    public int updateAddListField(String colNm, MelonDTO pDTO) throws Exception {
 
         log.info(this.getClass().getName() + ".updateAddListField Start!");
 
         int res = 0;
 
-        MongoCollection<Document> col = mongodb.getCollection(pColNm);
+        MongoCollection<Document> col = mongodb.getCollection(colNm);
 
         String singer = CmmUtil.nvl(pDTO.singer());
         List<String> member = pDTO.member();
 
-        log.info("pColNm : " + pColNm);
+        log.info("pColNm : " + colNm);
         log.info("pDTO : " + pDTO);
 
         // 조회할 조건(SQL의 WHERE 역할 /  SELECT * FROM MELON_20220321 where singer ='방탄소년단')
@@ -422,14 +422,14 @@ public class MelonMapper extends AbstractMongoDBComon implements IMelonMapper {
     }
 
     @Override
-    public List<MelonDTO> getSingerSongMember(String pColNm, MelonDTO pDTO) throws Exception {
+    public List<MelonDTO> getSingerSongMember(String colNm, MelonDTO pDTO) throws Exception {
 
         log.info(this.getClass().getName() + ".getSingerSongMember Start!");
 
         // 조회 결과를 전달하기 위한 객체 생성하기
         List<MelonDTO> rList = new LinkedList<>();
 
-        MongoCollection<Document> col = mongodb.getCollection(pColNm);
+        MongoCollection<Document> col = mongodb.getCollection(colNm);
 
         // 조회할 조건(SQL의 WHERE 역할 /  SELECT song, singer FROM MELON_20220321 where singer ='방탄소년단')
         Document query = new Document();
@@ -471,18 +471,18 @@ public class MelonMapper extends AbstractMongoDBComon implements IMelonMapper {
     }
 
     @Override
-    public int updateFieldAndAddField(String pColNm, MelonDTO pDTO) throws Exception {
+    public int updateFieldAndAddField(String colNm, MelonDTO pDTO) throws Exception {
         log.info(this.getClass().getName() + ".updateFieldAndAddField Start!");
 
         int res = 0;
 
-        MongoCollection<Document> col = mongodb.getCollection(pColNm);
+        MongoCollection<Document> col = mongodb.getCollection(colNm);
 
         String singer = CmmUtil.nvl(pDTO.singer());
         String updateSinger = CmmUtil.nvl(pDTO.updateSinger());
         String addFieldValue = CmmUtil.nvl(pDTO.addFieldValue());
 
-        log.info("pColNm : " + pColNm);
+        log.info("pColNm : " + colNm);
         log.info("pDTO : " + pDTO);
 
         // 조회할 조건(SQL의 WHERE 역할 /  SELECT * FROM MELON_20220321 where singer ='방탄소년단')
@@ -509,14 +509,14 @@ public class MelonMapper extends AbstractMongoDBComon implements IMelonMapper {
     }
 
     @Override
-    public List<MelonDTO> getSingerSongAddData(String pColNm, MelonDTO pDTO) throws Exception {
+    public List<MelonDTO> getSingerSongAddData(String colNm, MelonDTO pDTO) throws Exception {
 
         log.info(this.getClass().getName() + ".getSingerSongAddData Start!");
 
         // 조회 결과를 전달하기 위한 객체 생성하기
         List<MelonDTO> rList = new LinkedList<>();
 
-        MongoCollection<Document> col = mongodb.getCollection(pColNm);
+        MongoCollection<Document> col = mongodb.getCollection(colNm);
 
         // 조회할 조건(SQL의 WHERE 역할 /  SELECT song, singer FROM MELON_20220321 where singer ='방탄소년단')
         Document query = new Document();
@@ -557,17 +557,17 @@ public class MelonMapper extends AbstractMongoDBComon implements IMelonMapper {
     }
 
     @Override
-    public int deleteDocument(String pColNm, MelonDTO pDTO) throws Exception {
+    public int deleteDocument(String colNm, MelonDTO pDTO) throws Exception {
 
         log.info(this.getClass().getName() + ".deleteDocument Start!");
 
         int res = 0;
 
-        MongoCollection<Document> col = mongodb.getCollection(pColNm);
+        MongoCollection<Document> col = mongodb.getCollection(colNm);
 
         String singer = CmmUtil.nvl(pDTO.singer());
 
-        log.info("pColNm : " + pColNm);
+        log.info("pColNm : " + colNm);
         log.info("pDTO : " + pDTO);
 
         // 조회할 조건(SQL의 WHERE 역할 /  SELECT * FROM MELON_20220321 where singer ='방탄소년단')
