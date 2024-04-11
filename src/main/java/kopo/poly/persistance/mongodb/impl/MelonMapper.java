@@ -136,14 +136,14 @@ public class MelonMapper extends AbstractMongoDBComon implements IMelonMapper {
     }
 
     @Override
-    public List<MelonDTO> getSingerSong(String pColNm, MelonDTO pDTO) throws Exception {
+    public List<MelonDTO> getSingerSong(String colNm, MelonDTO pDTO) throws Exception {
 
         log.info(this.getClass().getName() + ".getSingerSong Start!");
 
         // 조회 결과를 전달하기 위한 객체 생성하기
         List<MelonDTO> rList = new LinkedList<>();
 
-        MongoCollection<Document> col = mongodb.getCollection(pColNm);
+        MongoCollection<Document> col = mongodb.getCollection(colNm);
 
         // 조회할 조건(SQL의 WHERE 역할 /  SELECT song, singer FROM MELON_20220321 where singer ='방탄소년단')
         Document query = new Document();
