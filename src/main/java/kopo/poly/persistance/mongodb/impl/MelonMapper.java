@@ -1,5 +1,6 @@
 package kopo.poly.persistance.mongodb.impl;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.FindIterable;
@@ -213,7 +214,13 @@ public class MelonMapper extends AbstractMongoDBComon implements IMelonMapper {
         pList.parallelStream().forEach(melon ->
                 list.add(new Document(new ObjectMapper().convertValue(melon, Map.class))));
 
-        // 레코드 리스트 단위로 한번에 저장하기
+        // ObjectMapper 이용한 List<MelonDTO> -> MeList<Document> 변경하기
+//        List<Document> list = new ObjectMapper().convertValue(pList,
+//                new TypeReference<>() {
+//                });
+
+
+        // List<Document> 파라미터로 사용하며, 레코드 리스트 단위로 한번에 저장하기
         col.insertMany(list);
 
         res = 1;
