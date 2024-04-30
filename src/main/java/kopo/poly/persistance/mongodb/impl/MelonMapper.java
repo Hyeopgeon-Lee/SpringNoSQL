@@ -1,6 +1,5 @@
 package kopo.poly.persistance.mongodb.impl;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.FindIterable;
@@ -56,6 +55,9 @@ public class MelonMapper extends AbstractMongoDBComon implements IMelonMapper {
 
         log.info(this.getClass().getName() + ".getSongList Start!");
 
+        // 조회 결과를 전달하기 위한 객체 생성하기
+        List<MelonDTO> rList = new LinkedList<>();
+
         MongoCollection<Document> col = mongodb.getCollection(colNm);
 
         // 조회 결과 중 출력할 컬럼들(SQL의 SELECT절과 FROM절 가운데 컬럼들과 유사함)
@@ -71,11 +73,18 @@ public class MelonMapper extends AbstractMongoDBComon implements IMelonMapper {
         // 조회하는 데이터의 양이 적은 경우, find를 사용하고, 데이터양이 많은 경우 무조건 Aggregate 사용한다.
         FindIterable<Document> rs = col.find(new Document()).projection(projection);
 
-        // FindIterable<Document> 타입을 List<MelonDTO> 타입으로 변경하기
-        List<MelonDTO> rList = new ObjectMapper().convertValue(rs,
-                new TypeReference<>() {
-                });
+        for (Document doc : rs) {
+            String song = CmmUtil.nvl(doc.getString("song"));
+            String singer = CmmUtil.nvl(doc.getString("singer"));
 
+            log.info("song : " + song + "/ singer : " + singer);
+
+            MelonDTO rDTO = MelonDTO.builder().song(song).singer(singer).build();
+
+            // 레코드 결과를 List에 저장하기
+            rList.add(rDTO);
+
+        }
         log.info(this.getClass().getName() + ".getSongList End!");
 
         return rList;
@@ -85,6 +94,9 @@ public class MelonMapper extends AbstractMongoDBComon implements IMelonMapper {
     public List<MelonDTO> getSingerSongCnt(String colNm) throws Exception {
 
         log.info(this.getClass().getName() + ".getSingerSongCnt Start!");
+
+        // 조회 결과를 전달하기 위한 객체 생성하기
+        List<MelonDTO> rList = new LinkedList<>();
 
         // MongoDB 조회 쿼리
         List<? extends Bson> pipeline = Arrays.asList(
@@ -100,9 +112,23 @@ public class MelonMapper extends AbstractMongoDBComon implements IMelonMapper {
         MongoCollection<Document> col = mongodb.getCollection(colNm);
         AggregateIterable<Document> rs = col.aggregate(pipeline).allowDiskUse(true);
 
-        List<MelonDTO> rList = new ObjectMapper().convertValue(rs,
-                new TypeReference<>() {
-                });
+        for (Document doc : rs) {
+            String singer = doc.getString("singer");
+            int singerCnt = doc.getInteger("singerCnt", 0);
+
+            log.info("singer : " + singer + "/ singerCnt : " + singerCnt);
+
+            MelonDTO rDTO = MelonDTO.builder().singer(singer).singerCnt(singerCnt).build();
+
+            rList.add(rDTO);
+
+            rDTO = null;
+            doc = null;
+        }
+
+        rs = null;
+        col = null;
+        pipeline = null;
 
         log.info(this.getClass().getName() + ".getSingerSongCnt End!");
 
@@ -113,6 +139,9 @@ public class MelonMapper extends AbstractMongoDBComon implements IMelonMapper {
     public List<MelonDTO> getSingerSong(String colNm, MelonDTO pDTO) throws Exception {
 
         log.info(this.getClass().getName() + ".getSingerSong Start!");
+
+        // 조회 결과를 전달하기 위한 객체 생성하기
+        List<MelonDTO> rList = new LinkedList<>();
 
         MongoCollection<Document> col = mongodb.getCollection(colNm);
 
@@ -133,11 +162,16 @@ public class MelonMapper extends AbstractMongoDBComon implements IMelonMapper {
         // 조회하는 데이터의 양이 적은 경우, find를 사용하고, 데이터양이 많은 경우 무조건 Aggregate 사용한다.
         FindIterable<Document> rs = col.find(query).projection(projection);
 
-        // FindIterable<Document> 타입을 List<MelonDTO> 타입으로 변경하기
-        List<MelonDTO> rList = new ObjectMapper().convertValue(rs,
-                new TypeReference<>() {
-                });
+        for (Document doc : rs) {
+            String song = CmmUtil.nvl(doc.getString("song"));
+            String singer = CmmUtil.nvl(doc.getString("singer"));
 
+            MelonDTO rDTO = MelonDTO.builder().song(song).singer(singer).build();
+
+            // 레코드 결과를 List에 저장하기
+            rList.add(rDTO);
+
+        }
         log.info(this.getClass().getName() + ".getSingerSong End!");
 
         return rList;
@@ -234,6 +268,9 @@ public class MelonMapper extends AbstractMongoDBComon implements IMelonMapper {
 
         log.info(this.getClass().getName() + ".getUpdateSinger Start!");
 
+        // 조회 결과를 전달하기 위한 객체 생성하기
+        List<MelonDTO> rList = new LinkedList<>();
+
         MongoCollection<Document> col = mongodb.getCollection(colNm);
 
         // 조회할 조건(SQL의 WHERE 역할 /  SELECT song, singer FROM MELON_20220321 where singer ='방탄소년단')
@@ -253,11 +290,20 @@ public class MelonMapper extends AbstractMongoDBComon implements IMelonMapper {
         // 조회하는 데이터의 양이 적은 경우, find를 사용하고, 데이터양이 많은 경우 무조건 Aggregate 사용한다.
         FindIterable<Document> rs = col.find(query).projection(projection);
 
-        // FindIterable<Document> 타입을 List<MelonDTO> 타입으로 변경하기
-        List<MelonDTO> rList = new ObjectMapper().convertValue(rs,
-                new TypeReference<>() {
-                });
+        for (Document doc : rs) {
 
+            // MongoDB 조회 결과를 MelonDTO 저장하기 위해 변수에 저장
+            String song = CmmUtil.nvl(doc.getString("song"));
+            String singer = CmmUtil.nvl(doc.getString("singer"));
+
+            log.info("song : " + song + "/ singer : " + singer);
+
+            MelonDTO rDTO = MelonDTO.builder().song(song).singer(singer).build();
+
+            // 레코드 결과를 List에 저장하기
+            rList.add(rDTO);
+
+        }
         log.info(this.getClass().getName() + ".getUpdateSinger End!");
 
         return rList;
@@ -303,6 +349,9 @@ public class MelonMapper extends AbstractMongoDBComon implements IMelonMapper {
 
         log.info(this.getClass().getName() + ".getSingerSongNickname Start!");
 
+        // 조회 결과를 전달하기 위한 객체 생성하기
+        List<MelonDTO> rList = new LinkedList<>();
+
         MongoCollection<Document> col = mongodb.getCollection(colNm);
 
         // 조회할 조건(SQL의 WHERE 역할 /  SELECT song, singer FROM MELON_20220321 where singer ='방탄소년단')
@@ -323,11 +372,21 @@ public class MelonMapper extends AbstractMongoDBComon implements IMelonMapper {
         // 조회하는 데이터의 양이 적은 경우, find를 사용하고, 데이터양이 많은 경우 무조건 Aggregate 사용한다.
         FindIterable<Document> rs = col.find(query).projection(projection);
 
-        // FindIterable<Document> 타입을 List<MelonDTO> 타입으로 변경하기
-        List<MelonDTO> rList = new ObjectMapper().convertValue(rs,
-                new TypeReference<>() {
-                });
+        for (Document doc : rs) {
 
+            // MongoDB 조회 결과를 MelonDTO 저장하기 위해 변수에 저장
+            String song = CmmUtil.nvl(doc.getString("song"));
+            String singer = CmmUtil.nvl(doc.getString("singer"));
+            String nickname = CmmUtil.nvl(doc.getString("nickname"));
+
+            log.info("song : " + song + "/ singer : " + singer + "/ nickname : " + nickname);
+
+            MelonDTO rDTO = MelonDTO.builder().song(song).singer(singer).nickname(nickname).build();
+
+            // 레코드 결과를 List에 저장하기
+            rList.add(rDTO);
+
+        }
         log.info(this.getClass().getName() + ".getSingerSongNickname End!");
 
         return rList;
@@ -373,6 +432,9 @@ public class MelonMapper extends AbstractMongoDBComon implements IMelonMapper {
 
         log.info(this.getClass().getName() + ".getSingerSongMember Start!");
 
+        // 조회 결과를 전달하기 위한 객체 생성하기
+        List<MelonDTO> rList = new LinkedList<>();
+
         MongoCollection<Document> col = mongodb.getCollection(colNm);
 
         // 조회할 조건(SQL의 WHERE 역할 /  SELECT song, singer FROM MELON_20220321 where singer ='방탄소년단')
@@ -393,11 +455,21 @@ public class MelonMapper extends AbstractMongoDBComon implements IMelonMapper {
         // 조회하는 데이터의 양이 적은 경우, find를 사용하고, 데이터양이 많은 경우 무조건 Aggregate 사용한다.
         FindIterable<Document> rs = col.find(query).projection(projection);
 
-        // FindIterable<Document> 타입을 List<MelonDTO> 타입으로 변경하기
-        List<MelonDTO> rList = new ObjectMapper().convertValue(rs,
-                new TypeReference<>() {
-                });
+        for (Document doc : rs) {
 
+            // MongoDB 조회 결과를 MelonDTO 저장하기 위해 변수에 저장
+            String song = CmmUtil.nvl(doc.getString("song"));
+            String singer = CmmUtil.nvl(doc.getString("singer"));
+            List<String> member = doc.getList("member", String.class, new ArrayList<>());
+
+            log.info("song : " + song + "/ singer : " + singer + "/ member : " + member);
+
+            MelonDTO rDTO = MelonDTO.builder().song(song).singer(singer).member(member).build();
+
+            // 레코드 결과를 List에 저장하기
+            rList.add(rDTO);
+
+        }
         log.info(this.getClass().getName() + ".getSingerSongMember End!");
 
         return rList;
@@ -447,6 +519,9 @@ public class MelonMapper extends AbstractMongoDBComon implements IMelonMapper {
 
         log.info(this.getClass().getName() + ".getSingerSongAddData Start!");
 
+        // 조회 결과를 전달하기 위한 객체 생성하기
+        List<MelonDTO> rList = new LinkedList<>();
+
         MongoCollection<Document> col = mongodb.getCollection(colNm);
 
         // 조회할 조건(SQL의 WHERE 역할 /  SELECT song, singer FROM MELON_20220321 where singer ='방탄소년단')
@@ -467,11 +542,21 @@ public class MelonMapper extends AbstractMongoDBComon implements IMelonMapper {
         // 조회하는 데이터의 양이 적은 경우, find를 사용하고, 데이터양이 많은 경우 무조건 Aggregate 사용한다.
         FindIterable<Document> rs = col.find(query).projection(projection);
 
-        // FindIterable<Document> 타입을 List<MelonDTO> 타입으로 변경하기
-        List<MelonDTO> rList = new ObjectMapper().convertValue(rs,
-                new TypeReference<>() {
-                });
+        for (Document doc : rs) {
 
+            // MongoDB 조회 결과를 MelonDTO 저장하기 위해 변수에 저장
+            String song = CmmUtil.nvl(doc.getString("song"));
+            String singer = CmmUtil.nvl(doc.getString("singer"));
+            String addData = CmmUtil.nvl(doc.getString("addData"));
+
+            log.info("song : " + song + "/ singer : " + singer + "/ addData : " + addData);
+
+            MelonDTO rDTO = MelonDTO.builder().song(song).singer(singer).addFieldValue(addData).build();
+
+            // 레코드 결과를 List에 저장하기
+            rList.add(rDTO);
+
+        }
         log.info(this.getClass().getName() + ".getSingerSongAddData End!");
 
         return rList;
