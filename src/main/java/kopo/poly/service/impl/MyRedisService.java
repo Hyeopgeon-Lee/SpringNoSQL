@@ -25,7 +25,7 @@ public class MyRedisService implements IMyRedisService {
         String redisKey = "myRedis_String";
 
         // 저장 결과
-        RedisDTO rDTO = null;
+        RedisDTO rDTO;
 
         int res = myRedisMapper.saveString(redisKey, pDTO);
 
@@ -34,7 +34,7 @@ public class MyRedisService implements IMyRedisService {
 
         } else {
             log.info("Redis 저장 실패!!");
-            new Exception("Redis 저장 실패!!");
+            throw new Exception("Redis 저장 실패!!");
 
         }
 
@@ -51,7 +51,7 @@ public class MyRedisService implements IMyRedisService {
         String redisKey = "myRedis_String_JSON";
 
         // 저장 결과
-        RedisDTO rDTO = null;
+        RedisDTO rDTO;
 
         int res = myRedisMapper.saveStringJSON(redisKey, pDTO);
 
@@ -60,7 +60,7 @@ public class MyRedisService implements IMyRedisService {
 
         } else {
             log.info("Redis 저장 실패!!");
-            new Exception("Redis 저장 실패!!");
+            throw new Exception("Redis 저장 실패!!");
 
         }
         log.info(this.getClass().getName() + ".saveStringJSON End!");
@@ -77,7 +77,7 @@ public class MyRedisService implements IMyRedisService {
         String redisKey = "myRedis_List";
 
         // 저장 결과
-        List<String> rList = null;
+        List<String> rList;
 
         int res = myRedisMapper.saveList(redisKey, pList);
 
@@ -86,7 +86,7 @@ public class MyRedisService implements IMyRedisService {
 
         } else {
             log.info("Redis 저장 실패!!");
-            new Exception("Redis 저장 실패!!");
+            throw new Exception("Redis 저장 실패!!");
 
         }
 
@@ -104,7 +104,7 @@ public class MyRedisService implements IMyRedisService {
         String redisKey = "myRedis_List_JSON";
 
         // 저장 결과
-        List<RedisDTO> rList = null;
+        List<RedisDTO> rList;
 
         int res = myRedisMapper.saveListJSON(redisKey, pList);
 
@@ -113,7 +113,7 @@ public class MyRedisService implements IMyRedisService {
 
         } else {
             log.info("Redis 저장 실패!!");
-            new Exception("Redis 저장 실패!!");
+            throw new Exception("Redis 저장 실패!!");
 
         }
 
@@ -131,7 +131,7 @@ public class MyRedisService implements IMyRedisService {
         String redisKey = "myRedis_Hash";
 
         // 저장 결과
-        RedisDTO rDTO = null;
+        RedisDTO rDTO;
 
         int res = myRedisMapper.saveHash(redisKey, pDTO);
 
@@ -140,7 +140,7 @@ public class MyRedisService implements IMyRedisService {
 
         } else {
             log.info("Redis 저장 실패!!");
-            new Exception("Redis 저장 실패!!");
+            throw new Exception("Redis 저장 실패!!");
 
         }
 
@@ -158,7 +158,7 @@ public class MyRedisService implements IMyRedisService {
         String redisKey = "myRedis_Set_JSON";
 
         // 저장 결과
-        Set<RedisDTO> rSet = null;
+        Set<RedisDTO> rSet;
 
         int res = myRedisMapper.saveSetJSON(redisKey, pList);
 
@@ -167,7 +167,7 @@ public class MyRedisService implements IMyRedisService {
 
         } else {
             log.info("Redis 저장 실패!!");
-            new Exception("Redis 저장 실패!!");
+            throw new Exception("Redis 저장 실패!!");
 
         }
 
@@ -185,7 +185,7 @@ public class MyRedisService implements IMyRedisService {
         String redisKey = "myRedis_ZSet_JSON";
 
         // 저장 결과
-        Set<RedisDTO> rSet = null;
+        Set<RedisDTO> rSet;
 
         int res = myRedisMapper.saveZSetJSON(redisKey, pList);
 
@@ -194,7 +194,7 @@ public class MyRedisService implements IMyRedisService {
 
         } else {
             log.info("Redis 저장 실패!!");
-            new Exception("Redis 저장 실패!!");
+            throw new Exception("Redis 저장 실패!!");
 
         }
 

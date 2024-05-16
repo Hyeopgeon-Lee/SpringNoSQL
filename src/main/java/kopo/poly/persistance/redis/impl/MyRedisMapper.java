@@ -163,7 +163,7 @@ public class MyRedisMapper implements IMyRedisMapper {
 
         pList.forEach(dto -> {
 //            오름차순으로 저장하기
-//            redisDB.opsForList().rightPush(redisKey, CmmUtil.nvl(text));
+//                    redisDB.opsForList().rightPush(redisKey, CmmUtil.nvl(dto.text()));
 
                     // 내림차순으로 저장하기
                     redisDB.opsForList().leftPush(redisKey, CmmUtil.nvl(dto.text()));
