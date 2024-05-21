@@ -11,6 +11,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -48,7 +49,7 @@ public class MelonCacheMapper implements IMelonCacheMapper {
 
     @Override
     public boolean getExistKey(String key) throws Exception {
-        return redisDB.hasKey(key);
+        return Optional.ofNullable(redisDB.hasKey(key)).orElseThrow(Exception::new);
     }
 
     @Override
@@ -62,7 +63,7 @@ public class MelonCacheMapper implements IMelonCacheMapper {
         List<MelonDTO> rList = null;
 
         // 저장된 키가 존재한다면...
-        if (redisDB.hasKey(key)) {
+        if (Optional.ofNullable(redisDB.hasKey(key)).orElseThrow(Exception::new)) {
             rList = (List) redisDB.opsForList().range(key, 0, -1);
         }
 

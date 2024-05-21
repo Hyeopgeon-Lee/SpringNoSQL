@@ -10,6 +10,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -57,7 +58,7 @@ public class MovieMapper implements IMovieMapper {
     @Override
     public boolean getExistKey(String redisKey) throws Exception {
         log.info(this.getClass().getName() + ".getExistKey Start!");
-        return redisDB.hasKey(redisKey);
+        return Optional.ofNullable(redisDB.hasKey(redisKey)).orElseThrow(Exception::new);
     }
 
     @Override
