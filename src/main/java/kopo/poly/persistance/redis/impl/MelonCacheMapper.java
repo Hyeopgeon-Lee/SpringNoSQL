@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class MelonCacheMapper implements IMelonCacheMapper {
 
-    public final RedisTemplate<String, Object> redisDB;
+    private final RedisTemplate<String, Object> redisDB;
 
     @Override
     public int insertSong(List<MelonDTO> pList, String redisKey) throws Exception {
