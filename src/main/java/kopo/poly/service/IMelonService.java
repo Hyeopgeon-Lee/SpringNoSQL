@@ -63,6 +63,6 @@ public interface IMelonService {
     /**
      * BTS 노래 삭제하기
      */
-    public List<MelonDTO> deleteDocument(MelonDTO pDTO) throws Exception;
+    List<MelonDTO> deleteDocument(MelonDTO pDTO) throws Exception;
 
 }
