@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class MovieMapper implements IMovieMapper {
 
-    public final RedisTemplate<String, Object> redisDB;
+    private final RedisTemplate<String, Object> redisDB;
 
     /**
      * 수집 및 조회 요청시 1시간씩 유효시간 연장하기
