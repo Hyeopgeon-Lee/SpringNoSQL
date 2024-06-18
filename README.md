@@ -11,6 +11,7 @@ Spring 3.x부터 자바8 지원불가 정책에 따라 자바 17 기반 실습 �
 1. 웹크롤링으로 수집된 데이터를 MongoDB에 저장 및 조회, 수정, 삭제 프로그래밍
 2. RedisDB를 활용한 캐싱 프로그래밍
 3. 음성명령으로 CGV 영화 순위 정보를 웹크롤링한 뒤, RedisDB에 저장하는 프로그래밍
+4. 쿠버네티스 배포를 위한 Helm 설정 파일 및 Service, Deployment 배포 
 
 ## 주요 적용 프레임워크
 * Spring Boot Frameworks, Spring Data JPA, QueryDSL
