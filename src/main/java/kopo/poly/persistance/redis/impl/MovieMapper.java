@@ -10,6 +10,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -17,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class MovieMapper implements IMovieMapper {
 
-    public final RedisTemplate<String, Object> redisDB;
+    private final RedisTemplate<String, Object> redisDB;
 
     /**
      * 수집 및 조회 요청시 1시간씩 유효시간 연장하기
@@ -57,7 +58,7 @@ public class MovieMapper implements IMovieMapper {
     @Override
     public boolean getExistKey(String redisKey) throws Exception {
         log.info(this.getClass().getName() + ".getExistKey Start!");
-        return redisDB.hasKey(redisKey);
+        return Optional.ofNullable(redisDB.hasKey(redisKey)).orElseThrow(Exception::new);
     }
 
     @Override
@@ -73,7 +74,7 @@ public class MovieMapper implements IMovieMapper {
         // RedisDTO에 저장된 데이터를 자동으로 JSON으로 변경하기
         redisDB.setValueSerializer(new Jackson2JsonRedisSerializer<>(MovieDTO.class));
 
-        if (redisDB.hasKey(redisKey)) {
+        if (Optional.ofNullable(redisDB.hasKey(redisKey)).orElseThrow(Exception::new)) {
             rList = (List) redisDB.opsForList().range(redisKey, 0, -1);
 
             // 데이터 유효시간 1시간 연장하기
