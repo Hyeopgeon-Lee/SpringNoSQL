@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nosql-app
+  namespace: notice
+  labels:
+    app: nosql-app
+spec:
+  selector:
+    app: nosql-app
+    tier: backend
+  ports:
+    - protocol: TCP
+      port: 11000
+      targetPort: 11000
+      nodePort: 31200
+  type: NodePort
+
+
+
