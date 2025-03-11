@@ -1,6 +1,7 @@
 package kopo.poly.persistance.mongodb.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mongodb.MongoException;
 import com.mongodb.client.MongoCollection;
 import kopo.poly.dto.MongoDTO;
 import kopo.poly.persistance.mongodb.AbstractMongoDBComon;
@@ -21,11 +22,11 @@ public class MongoMapper extends AbstractMongoDBComon implements IMongoMapper {
     private final MongoTemplate mongodb;
 
     @Override
-    public int insertData(MongoDTO pDTO, String colNm) throws Exception {
+    public int insertData(MongoDTO pDTO, String colNm) throws MongoException {
 
-        log.info(this.getClass().getName() + ".insertData Start!");
+        log.info("{}.insertData Start!", this.getClass().getName());
 
-        int res = 0;
+        int res;
 
         // 데이터를 저장할 컬렉션 생성
         super.createCollection(mongodb, colNm);
@@ -38,7 +39,7 @@ public class MongoMapper extends AbstractMongoDBComon implements IMongoMapper {
 
         res = 1;
 
-        log.info(this.getClass().getName() + ".insertData End!");
+        log.info("{}.insertData End!", this.getClass().getName());
 
         return res;
     }
