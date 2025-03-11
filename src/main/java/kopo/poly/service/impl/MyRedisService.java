@@ -19,7 +19,7 @@ public class MyRedisService implements IMyRedisService {
 
     @Override
     public RedisDTO saveString(RedisDTO pDTO) throws Exception {
-        log.info(this.getClass().getName() + ".saveString Start!");
+        log.info("{}.saveString Start!", this.getClass().getName());
 
         // 저장할 RedisDB 키
         String redisKey = "myRedis_String";
@@ -38,14 +38,14 @@ public class MyRedisService implements IMyRedisService {
 
         }
 
-        log.info(this.getClass().getName() + ".saveString End!");
+        log.info("{}.saveString End!", this.getClass().getName());
 
         return rDTO;
     }
 
     @Override
     public RedisDTO saveStringJSON(RedisDTO pDTO) throws Exception {
-        log.info(this.getClass().getName() + ".saveStringJSON Start!");
+        log.info("{}.saveStringJSON Start!", this.getClass().getName());
 
         // 저장할 RedisDB 키
         String redisKey = "myRedis_String_JSON";
@@ -63,7 +63,7 @@ public class MyRedisService implements IMyRedisService {
             throw new Exception("Redis 저장 실패!!");
 
         }
-        log.info(this.getClass().getName() + ".saveStringJSON End!");
+        log.info("{}.saveStringJSON End!", this.getClass().getName());
 
         return rDTO;
     }
@@ -71,7 +71,7 @@ public class MyRedisService implements IMyRedisService {
     @Override
     public List<String> saveList(List<RedisDTO> pList) throws Exception {
 
-        log.info(this.getClass().getName() + ".saveList Start!");
+        log.info("{}.saveList Start!", this.getClass().getName());
 
         // 저장할 RedisDB 키
         String redisKey = "myRedis_List";
@@ -90,7 +90,7 @@ public class MyRedisService implements IMyRedisService {
 
         }
 
-        log.info(this.getClass().getName() + ".saveList End!");
+        log.info("{}.saveList End!", this.getClass().getName());
 
         return rList;
     }
@@ -98,7 +98,7 @@ public class MyRedisService implements IMyRedisService {
     @Override
     public List<RedisDTO> saveListJSON(List<RedisDTO> pList) throws Exception {
 
-        log.info(this.getClass().getName() + ".saveListJSON Start!");
+        log.info("{}.saveListJSON Start!", this.getClass().getName());
 
         // 저장할 RedisDB 키
         String redisKey = "myRedis_List_JSON";
@@ -117,7 +117,7 @@ public class MyRedisService implements IMyRedisService {
 
         }
 
-        log.info(this.getClass().getName() + ".saveListJSON End!");
+        log.info("{}.saveListJSON End!", this.getClass().getName());
 
         return rList;
     }
@@ -125,7 +125,7 @@ public class MyRedisService implements IMyRedisService {
     @Override
     public RedisDTO saveHash(RedisDTO pDTO) throws Exception {
 
-        log.info(this.getClass().getName() + ".saveHash Start!");
+        log.info("{}.saveHash Start!", this.getClass().getName());
 
         // 저장할 RedisDB 키
         String redisKey = "myRedis_Hash";
@@ -144,7 +144,7 @@ public class MyRedisService implements IMyRedisService {
 
         }
 
-        log.info(this.getClass().getName() + ".saveHash End!");
+        log.info("{}.saveHash End!", this.getClass().getName());
 
         return rDTO;
     }
@@ -152,7 +152,7 @@ public class MyRedisService implements IMyRedisService {
     @Override
     public Set<RedisDTO> saveSetJSON(List<RedisDTO> pList) throws Exception {
 
-        log.info(this.getClass().getName() + ".saveSetJSON Start!");
+        log.info("{}.saveSetJSON Start!", this.getClass().getName());
 
         // 저장할 RedisDB 키
         String redisKey = "myRedis_Set_JSON";
@@ -171,7 +171,7 @@ public class MyRedisService implements IMyRedisService {
 
         }
 
-        log.info(this.getClass().getName() + ".saveSetJSON End!");
+        log.info("{}.saveSetJSON End!", this.getClass().getName());
 
         return rSet;
     }
@@ -179,7 +179,7 @@ public class MyRedisService implements IMyRedisService {
     @Override
     public Set<RedisDTO> saveZSetJSON(List<RedisDTO> pList) throws Exception {
 
-        log.info(this.getClass().getName() + ".saveZSetJSON Start!");
+        log.info("{}.saveZSetJSON Start!", this.getClass().getName());
 
         // 저장할 RedisDB 키
         String redisKey = "myRedis_ZSet_JSON";
@@ -198,7 +198,7 @@ public class MyRedisService implements IMyRedisService {
 
         }
 
-        log.info(this.getClass().getName() + ".saveZSetJSON End!");
+        log.info("{}.saveZSetJSON End!", this.getClass().getName());
 
         return rSet;
     }
