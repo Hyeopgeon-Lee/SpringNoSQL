@@ -29,7 +29,9 @@ public class MongoMapper extends AbstractMongoDBComon implements IMongoMapper {
         int res;
 
         // 데이터를 저장할 컬렉션 생성
-        super.createCollection(mongodb, colNm);
+        if (super.createCollection(mongodb, colNm)) {
+            log.info("{} 생성되었습니다.", colNm);
+        }
 
         // 저장할 컬렉션 객체 생성
         MongoCollection<Document> col = mongodb.getCollection(colNm);

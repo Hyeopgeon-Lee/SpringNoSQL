@@ -26,13 +26,13 @@ public class MovieMapper implements IMovieMapper {
      * @param redisKey 저장된 키 이름
      */
     private void setTimeOutHour(String redisKey) throws Exception {
-        log.info(this.getClass().getName() + ".setTimeOutHour Start!");
+        log.info("{}.setTimeOutHour Start!", this.getClass().getName());
         redisDB.expire(redisKey, 1, TimeUnit.HOURS);
     }
 
     @Override
     public int insertMovie(MovieDTO pDTO, String redisKey) throws Exception {
-        log.info(this.getClass().getName() + ".insertMovie Start!");
+        log.info("{}.insertMovie Start!", this.getClass().getName());
 
         int res;
 
@@ -50,20 +50,20 @@ public class MovieMapper implements IMovieMapper {
 
         res = 1;
 
-        log.info(this.getClass().getName() + ".insertMovie End!");
+        log.info("{}.insertMovie End!", this.getClass().getName());
 
         return res;
     }
 
     @Override
     public boolean getExistKey(String redisKey) throws Exception {
-        log.info(this.getClass().getName() + ".getExistKey Start!");
+        log.info("{}.getExistKey Start!", this.getClass().getName());
         return Optional.ofNullable(redisDB.hasKey(redisKey)).orElseThrow(Exception::new);
     }
 
     @Override
     public List<MovieDTO> getMovieList(String redisKey) throws Exception {
-        log.info(this.getClass().getName() + ".getMovieList Start!");
+        log.info("{}.getMovieList Start!", this.getClass().getName());
 
         // 결과 값 저장할 객체
         List<MovieDTO> rList = null;
@@ -82,7 +82,7 @@ public class MovieMapper implements IMovieMapper {
 
         }
 
-        log.info(this.getClass().getName() + ".getMovieList End!");
+        log.info("{}.getMovieList End!", this.getClass().getName());
 
         return rList;
     }

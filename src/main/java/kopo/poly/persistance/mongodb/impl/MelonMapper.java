@@ -5,6 +5,8 @@ import com.mongodb.MongoException;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
 import kopo.poly.dto.MelonDTO;
 import kopo.poly.persistance.mongodb.AbstractMongoDBComon;
 import kopo.poly.persistance.mongodb.IMelonMapper;
@@ -17,8 +19,6 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
-
-import static com.mongodb.client.model.Updates.set;
 
 @Slf4j
 @Component
@@ -35,7 +35,9 @@ public class MelonMapper extends AbstractMongoDBComon implements IMelonMapper {
         int res;
 
         // 데이터를 저장할 컬렉션 생성
-        super.createCollection(mongodb, colNm, "collectTime");
+        if (super.createCollection(mongodb, colNm, "collectTime")) {
+            log.info("{} 생성되었습니다.", colNm);
+        }
 
         // 저장할 컬렉션 객체 생성
         MongoCollection<Document> col = mongodb.getCollection(colNm);
@@ -178,11 +180,8 @@ public class MelonMapper extends AbstractMongoDBComon implements IMelonMapper {
 
         log.info("{}.dropCollection Start!", this.getClass().getName());
 
-        int res;
-
-        super.dropCollection(mongodb, colNm);
-
-        res = 1;
+        // 컬렉션 삭제하기
+        int res = super.dropCollection(mongodb, colNm) ? 1 : 0;
 
         log.info("{}.dropCollection End!", this.getClass().getName());
 
@@ -197,7 +196,9 @@ public class MelonMapper extends AbstractMongoDBComon implements IMelonMapper {
         int res;
 
         // 데이터를 저장할 컬렉션 생성
-        super.createCollection(mongodb, colNm, "collectTime");
+        if (super.createCollection(mongodb, colNm, "collectTime")) {
+            log.info("{} 생성되었습니다.", colNm);
+        }
 
         // 저장할 컬렉션 객체 생성
         MongoCollection<Document> col = mongodb.getCollection(colNm);
@@ -208,11 +209,9 @@ public class MelonMapper extends AbstractMongoDBComon implements IMelonMapper {
         pList.parallelStream().forEach(melon ->
                 list.add(new Document(new ObjectMapper().convertValue(melon, Map.class))));
 
-        // ObjectMapper 이용한 List<MelonDTO> -> MeList<Document> 변경하기
-//        List<Document> list = new ObjectMapper().convertValue(pList,
-//                new TypeReference<>() {
-//                });
-
+        // 람다식 활용하여 싱글 쓰레드
+//        pList.forEach(melon ->
+//                list.add(new Document(new ObjectMapper().convertValue(melon, Map.class))));
 
         // List<Document> 파라미터로 사용하며, 레코드 리스트 단위로 한번에 저장하기
         col.insertMany(list);
@@ -236,20 +235,14 @@ public class MelonMapper extends AbstractMongoDBComon implements IMelonMapper {
         String singer = CmmUtil.nvl(pDTO.singer());
         String updateSinger = CmmUtil.nvl(pDTO.updateSinger());
 
-        log.info("pColNm : {}", colNm);
-        log.info("singer : {}", singer);
-        log.info("updateSinger : {}", updateSinger);
+        log.info("pDTO : {}", pDTO);
 
-        // 조회할 조건(SQL의 WHERE 역할 /  SELECT * FROM MELON_20220321 where singer ='방탄소년단')
-        Document query = new Document();
-        query.append("singer", singer);
+        // 업데이트할 내용 설정 (singer 값을 updateSinger로 변경)
+        Document update = new Document("$set", new Document("singer", updateSinger));
 
-        // MongoDB 데이터 수정은 반드시 컬렉션을 조회하고, 조회된 ObjectID를 기반으로 데이터를 수정함
-        // MongoDB 환경은 분산환경(Sharding)으로 구성될 수 있기 때문에 정확한 PK에 매핑하기 위해서임
-        FindIterable<Document> rs = col.find(query);
-
-        // 람다식 활용하여 컬렉션에 조회된 데이터들을 수정하기
-        rs.forEach(doc -> col.updateOne(doc, new Document("$set", new Document("singer", updateSinger))));
+        // UPDATE MELON_20220321 SET singer = 'BTS' WHERE singer ='방탄소년단')
+        // Filters.eq : singer ='방탄소년단'
+        col.updateMany(Filters.eq("singer", singer), update);
 
         res = 1;
 
@@ -316,21 +309,16 @@ public class MelonMapper extends AbstractMongoDBComon implements IMelonMapper {
         String singer = CmmUtil.nvl(pDTO.singer());
         String nickname = CmmUtil.nvl(pDTO.nickname());
 
-        log.info("pColNm : {}", colNm);
-        log.info("singer : {}", singer);
-        log.info("nickname : {}", nickname);
+        log.info("pDTO : {}", pDTO);
 
-        // 조회할 조건(SQL의 WHERE 역할 /  SELECT * FROM MELON_20220321 where singer ='방탄소년단')
-        Document query = new Document();
-        query.append("singer", singer);
-
-        // MongoDB 데이터 삭제는 반드시 컬렉션을 조회하고, 조회된 ObjectID를 기반으로 데이터를 삭제함
-        // MongoDB 환경은 분산환경(Sharding)으로 구성될 수 있기 때문에 정확한 PK에 매핑하기 위해서임
-        FindIterable<Document> rs = col.find(query);
-
-        // 람다식 활용하여 컬렉션에 조회된 데이터들을 수정하기
-        // MongoDB Driver는 MongoDB의 "$set" 함수를 대신할 자바 함수를 구현함
-        rs.forEach(doc -> col.updateOne(doc, set("nickname", nickname)));
+        // 업데이트할 내용 설정 (nickname 문서에 '아미' 추가)
+        // 문서 추가는 수정과 동일하게 $set 사용하며, 기존 문서에 값이 없으면 추가함
+        // Updates.set("nickname", nickname)
+        
+        // UPDATE MELON_20220321 SET singer = 'BTS' WHERE singer ='방탄소년단')
+        // Filters.eq : singer ='방탄소년단'
+        col.updateMany(Filters.eq("singer", singer),
+                Updates.set("nickname", nickname));
 
         res = 1;
 
@@ -402,18 +390,13 @@ public class MelonMapper extends AbstractMongoDBComon implements IMelonMapper {
         log.info("pColNm : {}", colNm);
         log.info("pDTO : {}", pDTO);
 
-        // 조회할 조건(SQL의 WHERE 역할 /  SELECT * FROM MELON_20220321 where singer ='방탄소년단')
-        Document query = new Document();
-        query.append("singer", singer);
+        // 업데이트할 내용 설정 (nickname 문서에 '아미' 추가)
+        // 문서 추가는 수정과 동일하게 $set 사용하며, 기존 문서에 값이 없으면 추가함
+        Document update = new Document("$set", new Document("member", member));
 
-        // MongoDB 데이터 삭제는 반드시 컬렉션을 조회하고, 조회된 ObjectID를 기반으로 데이터를 삭제함
-        // MongoDB 환경은 분산환경(Sharding)으로 구성될 수 있기 때문에 정확한 PK에 매핑하기 위해서임
-        FindIterable<Document> rs = col.find(query);
-
-        // 람다식 활용하여 컬렉션에 조회된 데이터들을 수정하기
-        // List 구조는 String 구조와 동일하게 set에 List 객체를 저장하면 된다.
-        // MongoDB의 저장단위는 Document 객체는 자바의 Map을 상속받아 구현한 것이며, Map 특징인 값은 모든 객체가 저장 가능하다.
-        rs.forEach(doc -> col.updateOne(doc, set("member", member)));
+        // UPDATE MELON_20220321 SET singer = 'BTS' WHERE singer ='방탄소년단')
+        // Filters.eq : singer ='방탄소년단'
+        col.updateMany(Filters.eq("singer", singer), update);
 
         res = 1;
 
@@ -486,20 +469,13 @@ public class MelonMapper extends AbstractMongoDBComon implements IMelonMapper {
         log.info("pColNm : {}", colNm);
         log.info("pDTO : {}", pDTO);
 
-        // 조회할 조건(SQL의 WHERE 역할 /  SELECT * FROM MELON_20220321 where singer ='방탄소년단')
-        Document query = new Document();
-        query.append("singer", singer);
+        // 업데이트할 필드 (기존 필드 수정 & 새로운 필드 추가)
+        Document update = new Document("$set", new Document("singer", updateSinger)
+                .append("addData", addFieldValue));
 
-        // MongoDB 데이터 삭제는 반드시 컬렉션을 조회하고, 조회된 ObjectID를 기반으로 데이터를 삭제함
-        // MongoDB 환경은 분산환경(Sharding)으로 구성될 수 있기 때문에 정확한 PK에 매핑하기 위해서임
-        FindIterable<Document> rs = col.find(query);
-
-        // 한줄로 append해서 수정할 필드 추가해도 되지만, 가독성이 떨어져 줄마다 append 함
-        Document updateDoc = new Document();
-        updateDoc.append("singer", updateSinger); // 기존 필드 수정
-        updateDoc.append("addData", addFieldValue); // 신규 필드 추가
-
-        rs.forEach(doc -> col.updateOne(doc, new Document("$set", updateDoc)));
+        // UPDATE MELON_20220321 SET singer = 'BTS' WHERE singer ='방탄소년단')
+        // Filters.eq : singer ='방탄소년단'
+        col.updateMany(Filters.eq("singer", singer), update);
 
         res = 1;
 
@@ -571,18 +547,10 @@ public class MelonMapper extends AbstractMongoDBComon implements IMelonMapper {
         log.info("pColNm : {}", colNm);
         log.info("pDTO : {}", pDTO);
 
-        // 조회할 조건(SQL의 WHERE 역할 /  SELECT * FROM MELON_20220321 where singer ='방탄소년단')
-        Document query = new Document();
-        query.append("singer", singer);
+        // DELETE FROM MELON_20220321 WHERE singer ='방탄소년단'
+        // Filters.eq : singer ='방탄소년단'
+        col.deleteMany(Filters.eq("singer", singer));
 
-        // MongoDB 데이터 삭제는 반드시 컬렉션을 조회하고, 조회된 ObjectID를 기반으로 데이터를 삭제함
-        // MongoDB 환경은 분산환경(Sharding)으로 구성될 수 있기 때문에 정확한 PK에 매핑하기 위해서임
-        FindIterable<Document> rs = col.find(query);
-
-        // 람다식 활용하여 데이터 삭제하기
-        // 전체 컬렉션에 있는 데이터들을 삭제하기
-        rs.forEach(col::deleteOne); // Col 객체에 자동으로 매칭되어 실행될 함수 정의
-//        rs.forEach(doc -> col.deleteOne(doc)); // rs.forEach(col::deleteOne); 동일한 문법
         res = 1;
 
         log.info("{}.deleteDocument End!", this.getClass().getName());
