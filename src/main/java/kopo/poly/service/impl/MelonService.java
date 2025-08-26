@@ -12,6 +12,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
@@ -72,7 +74,18 @@ public class MelonService implements IMelonService {
 
     }
 
-
+    /**
+     * CacheEvict - 캐시 이름: "melonSongs"
+     * - 키 생성기: "melonKeyGen"
+     * - 동작:
+     * - 해당 키의 캐시 엔트리를 삭제(무효화)하여, 다음 조회(@Cacheable)가 DB→캐시로 재채움되도록 함.
+     * - 기본적으로 메서드가 정상 완료된 “후(after)”에 삭제 수행.
+     * 예외가 나도 무조건 지우고 싶다면 beforeInvocation = true 옵션 사용.
+     * - 사용 시점:
+     * - 수집/저장/수정/삭제 등으로 DB의 오늘자 데이터가 바뀌는 메서드에 적용.
+     * - 예: collectMelonSong() 끝에서 오늘 키를 비워 최신 데이터로 다시 채우게 함.
+     */
+    @CacheEvict(cacheNames = "melonSongs", keyGenerator = "melonKeyGen")
     @Override
     public int collectMelonSong() throws Exception {
 
@@ -87,17 +100,23 @@ public class MelonService implements IMelonService {
         // MongoDB에 데이터저장하기
         res = melonMapper.insertSong(rList, colNm);
 
-        if (!melonCacheMapper.getExistKey(colNm)) { // RedisDB에 저장된 데이터가 없다면...
-            res = melonCacheMapper.insertSong(rList, colNm); // RedisDB 저장하기
-
-        }
-
         // 로그 찍기(추후 찍은 로그를 통해 이 함수에 접근했는지 파악하기 용이하다.)
         log.info("{}.collectMelonSong End!", this.getClass().getName());
 
         return res;
     }
 
+    /**
+     * Cacheable
+     * - 캐시 이름: "melonSongs"
+     * - 키 생성기: "melonKeyGen" (예: "MELON_yyyyMMdd" 형식으로 생성)
+     * - 동작:
+     * 1) 같은 키가 캐시에 있으면 메서드를 호출하지 않고 캐시 값을 즉시 반환(HIT).
+     * 2) 없으면( MISS ) 메서드를 "한 번만" 실행해 결과를 캐시에 저장한 뒤 반환.
+     * sync = true 이면 동일 JVM 내에서 같은 키에 대한 동시 호출을 1회로 직렬화(캐시 스탬피드 방지).
+     * 다중 서버/파드 환경에서는 인스턴스별로 한 번씩 실행될 수 있음(분산 락 아님).
+     */
+    @Cacheable(cacheNames = "melonSongs", keyGenerator = "melonKeyGen", sync = true)
     @Override
     public List<MelonDTO> getSongList() throws Exception {
 
@@ -106,15 +125,7 @@ public class MelonService implements IMelonService {
         // MongoDB에 저장된 컬렉션 이름
         String colNm = "MELON_" + DateUtil.getDateTime("yyyyMMdd");
 
-        List<MelonDTO> rList;
-
-        if (melonCacheMapper.getExistKey(colNm)) { // RedisDB에 데이터가 존재하다면..
-            rList = melonCacheMapper.getSongList(colNm); // RedisDB에서 데이터 가져오기
-
-        } else {
-            rList = melonMapper.getSongList(colNm); // MongoDB에서 데이터 가져오기
-
-        }
+        List<MelonDTO> rList = melonMapper.getSongList(colNm); // MongoDB에서 데이터 가져오기
 
         log.info("{}.getSongList End!", this.getClass().getName());
 
