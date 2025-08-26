@@ -2,7 +2,6 @@ package kopo.poly.service.impl;
 
 import kopo.poly.dto.MelonDTO;
 import kopo.poly.persistance.mongodb.IMelonMapper;
-import kopo.poly.persistance.redis.IMelonCacheMapper;
 import kopo.poly.service.IMelonService;
 import kopo.poly.util.CmmUtil;
 import kopo.poly.util.DateUtil;
@@ -25,8 +24,6 @@ import java.util.List;
 public class MelonService implements IMelonService {
 
     private final IMelonMapper melonMapper; // MongoDB에 저장할 Mapper
-
-    private final IMelonCacheMapper melonCacheMapper; // RedisDB Mapper
 
     /**
      * 멜론 차트 수집 함수(웹 크롤링)
